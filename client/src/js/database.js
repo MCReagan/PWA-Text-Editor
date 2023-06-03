@@ -12,28 +12,23 @@ const initdb = async () =>
     },
   });
 
-async function getjateStore() {
-  const jateDb = await openDB("jate", 1);
-  const tx = jateDb.transaction("jate", "readwrite");
-  const store = tx.objectStore("jate");
-  return store;
-};
-
 export const getDb = async () => {
-  const store = await getjateStore();
-  const result = await store.getAll();
-  return result;
+  const jateDB = await openDB("jate", 1);
+  const tx = jateDB.transaction("jate", "readonly");
+  const store = tx.objectStore("jate");
+  const request = store.getAll();
+  const result = await request;
+  console.log(result);
 };
-
 
 export const putDb = async (content) => {
-  const store = await getjateStore();
-  const request = store.put({ id: 1, value: content });
-
+  const jateDB = await openDB("jate", 1);
+  const tx = jateDB.transaction("jate", "readwrite");
+  const store = tx.objectStore("jate");
+  const request = store.put({ jate: content });
   const result = await request;
-  console.log('Data saved to database', result.value);
+  console.log("Data saved to the database", result);
 };
-
 
 
 initdb();
